@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thesaurus Precum - Orações e Santos</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --cor-fundo: #fbf9f5;
+      --cor-card: #ffffff;
+      --cor-borda: #e6dfd3;
+      --cor-primaria: #701318;
+      --cor-dourado: #a88434;
+      --cor-texto: #2a2523;
+      --cor-subtexto: #6b635b;
+      --sombra: 0 4px 12px rgba(42, 37, 35, 0.06);
+    }
+
+    body.dark-mode {
+      --cor-fundo: #161514;
+      --cor-card: #201e1c;
+      --cor-borda: #38332e;
+      --cor-primaria: #d47a82;
+      --cor-dourado: #d4af37;
+      --cor-texto: #e8e3dc;
+      --cor-subtexto: #a3998f;
+      --sombra: 0 4px 14px rgba(0, 0, 0, 0.4);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--cor-fundo);
+      color: var(--cor-texto);
+      font-family: 'Merriweather', serif;
+      line-height: 1.75;
+      padding: 0 16px 60px 16px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Barra Superior */
+    .top-bar {
+      position: sticky;
+      top: 0;
+      background: var(--cor-fundo);
+      border-bottom: 1px solid var(--cor-borda);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      z-index: 100;
+      max-width: 800px;
+      margin: 0 auto;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-hamburguer {
+      background: none;
+      border: 1px solid var(--cor-borda);
+      background-color: var(--cor-card);
+      font-size: 1.3rem;
+      color: var(--cor-primaria);
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .top-bar-titulo {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      color: var(--cor-primaria);
+      font-weight: 700;
+      margin-left: 16px;
+      letter-spacing: 1px;
+    }
+
+    .acoes-topo {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .playlist-controles {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      background: var(--cor-card);
+      border: 1px solid var(--cor-borda);
+      border-radius: 4px;
+      padding: 2px 4px;
+    }
+
+    .btn-icone {
+      background: none;
+      border: 1px solid var(--cor-borda);
+      background-color: var(--cor-card);
+      font-size: 1.1rem;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--cor-texto);
+    }
+
+    .playlist-controles .btn-icone {
+      border: none;
+      background: transparent;
+      padding: 4px 8px;
+    }
+
+    .btn-mini {
+      font-size: 0.85rem;
+      opacity: 0.8;
+    }
+
+    .btn-mini:hover {
+      opacity: 1;
+      background: var(--cor-borda) !important;
+    }
+
+    .btn-hamburguer:hover, .btn-icone:hover {
+      background: var(--cor-borda);
+    }
+
+    .btn-icone.tocando {
+      border-color: var(--cor-dourado);
+      background-color: #f7eedb;
+      color: var(--cor-primaria);
+    }
+
+    body.dark-mode .btn-icone.tocando {
+      background-color: #38332e;
+    }
+
+    /* Imagens e Figuras Sacras */
+    .figura-sacra {
+      margin: 28px 0;
+      text-align: center;
+    }
+
+    .figura-sacra img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+      border: 1px solid var(--cor-dourado);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      display: block;
+      margin: 0 auto;
+    }
+
+    .figura-legenda {
+      font-size: 0.85rem;
+      font-style: italic;
+      color: var(--cor-subtexto);
+      margin-top: 8px;
+    }
+
+    /* Gaveta Lateral (Sidebar) */
+    .menu-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 998;
+      display: none;
+    }
+
+    .menu-overlay.visivel {
+      display: block;
+    }
+
+    .menu-lateral {
+      position: fixed;
+      top: 0;
+      left: -290px;
+      width: 280px;
+      height: 100vh;
+      background-color: var(--cor-card);
+      border-right: 2px solid var(--cor-dourado);
+      z-index: 999;
+      box-shadow: 4px 0 16px rgba(0, 0, 0, 0.2);
+      transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .menu-lateral.aberto {
+      left: 0;
+    }
+
+    .menu-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--cor-borda);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--cor-fundo);
+    }
+
+    .menu-header h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      color: var(--cor-primaria);
+    }
+
+    .btn-fechar {
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: var(--cor-subtexto);
+    }
+
+    .menu-lista {
+      list-style: none;
+      padding: 16px 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .menu-item-btn {
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      padding: 14px 20px;
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--cor-texto);
+      cursor: pointer;
+      border-left: 4px solid transparent;
+      transition: all 0.2s ease;
+    }
+
+    .menu-item-btn:hover {
+      background-color: var(--cor-fundo);
+      color: var(--cor-primaria);
+    }
+
+    .menu-item-btn.active {
+      background-color: var(--cor-fundo);
+      color: var(--cor-primaria);
+      border-left-color: var(--cor-primaria);
+    }
+
+    header {
+      text-align: center;
+      padding: 30px 16px 20px 16px;
+      border-bottom: 2px solid var(--cor-borda);
+      max-width: 800px;
+      margin: 0 auto 30px auto;
+    }
+
+    .cruz-ornamento {
+      font-size: 26px;
+      color: var(--cor-dourado);
+      margin-bottom: 8px;
+    }
+
+    header h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 2.2rem;
+      letter-spacing: 2px;
+      color: var(--cor-primaria);
+      margin-bottom: 6px;
+    }
+
+    header p {
+      font-size: 0.95rem;
+      color: var(--cor-subtexto);
+      font-style: italic;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--cor-card);
+      border: 1px solid var(--cor-borda);
+      border-radius: 6px;
+      padding: 28px;
+      margin-bottom: 24px;
+      box-shadow: var(--sombra);
+      position: relative;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--cor-dourado);
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+    }
+
+    .badge {
+      display: inline-block;
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--cor-dourado);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .card h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.4rem;
+      color: var(--cor-primaria);
+      margin-bottom: 16px;
+    }
+
+    .card p {
+      margin-bottom: 16px;
+      font-size: 1.02rem;
+    }
+
+    .card p:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .oracao-texto {
+      font-size: 1.05rem;
+      white-space: pre-line;
+      color: var(--cor-texto);
+    }
+
+    .palavra-oculta {
+      background-color: var(--cor-borda);
+      color: transparent;
+      border-radius: 3px;
+      padding: 1px 4px;
+      user-select: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .palavra-oculta:hover, .palavra-oculta.revelada {
+      background-color: var(--cor-borda);
+      color: var(--cor-primaria);
+      font-weight: 700;
+    }
+
+    .card-footer {
+      margin-top: 20px;
+      padding-top: 14px;
+      border-top: 1px solid var(--cor-borda);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: var(--cor-subtexto);
+    }
+
+    .btn-treino {
+      background: var(--cor-card);
+      border: 1px solid var(--cor-dourado);
+      color: var(--cor-primaria);
+      padding: 6px 14px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .btn-treino:hover {
+      background: var(--cor-dourado);
+      color: #fff;
+    }
+
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+  <!-- Barra Superior Unificada -->
+  <div class="top-bar">
+    <button class="btn-hamburguer" onclick="alternarMenu()" aria-label="Abrir menu">&#9776;</button>
+    <div class="top-bar-titulo">Thesaurus Precum</div>
+    
+    <div class="acoes-topo">
+      <div class="playlist-controles">
+        <button class="btn-icone btn-mini" onclick="faixaAnterior()" title="Faixa anterior" aria-label="Faixa anterior">⏮</button>
+        <button id="btn-audio" class="btn-icone" onclick="alternarMusica()" title="Tocar / Pausar" aria-label="Tocar ou pausar">🎵</button>
+        <button class="btn-icone btn-mini" onclick="proximaFaixa()" title="Próxima faixa" aria-label="Próxima faixa">⏭</button>
+      </div>
+      <button id="btn-tema" class="btn-icone" onclick="alternarTema()" aria-label="Alternar tema" title="Mudar tema">🌙</button>
+    </div>
+  </div>
+
+  <!-- Reprodutor de Áudio -->
+  <audio id="audio-fundo" preload="auto"></audio> 
+
+  <div id="overlay" class="menu-overlay" onclick="fecharMenu()"></div>
+
+  <!-- Menu Lateral -->
+  <nav id="menu-lateral" class="menu-lateral">
+    <div class="menu-header">
+      <h3>Navegação</h3>
+      <button class="btn-fechar" onclick="fecharMenu()">&times;</button>
+    </div>
+    <div class="menu-lista">
+      <button class="menu-item-btn active" onclick="selecionarCategoria('oracoes')">Orações</button>
+      <button class="menu-item-btn" onclick="selecionarCategoria('latim')">Preces Latinae (Latim)</button>
+      <button class="menu-item-btn" onclick="selecionarCategoria('eucaristia')">Santíssimo Sacramento</button>
+      <button class="menu-item-btn" onclick="selecionarCategoria('santos')">Vidas dos Santos</button>
+      <button class="menu-item-btn" onclick="selecionarCategoria('artes')">Arte Sacra</button>
+      <button class="menu-item-btn" onclick="selecionarCategoria('musica')">Música Sacra</button>
+      <button class="menu-item-btn" onclick="selecionarCategoria('literatura')">Biblioteca / Doutrina</button>
+    </div>
+  </nav>
+
+  <header>
+    <div class="cruz-ornamento">&#x2629;</div>
+    <h1>Thesaurus Precum</h1>
+    <p>Tesouro de Orações e Memória dos Santos</p>
+  </header>
+
+  <main>
+    <!-- 1. Orações em Português -->
+    <section id="aba-oracoes">  
+      <article class="card">
+        <span class="badge">Devoção</span>
+        <h2>Ave Maria</h2>
+        <div class="oracao-texto" id="oracao-maria">Ave Maria, cheia de graça, 
+o Senhor é convosco, 
+bendita sois vós entre as mulheres 
+e bendito é o fruto do vosso ventre, Jesus. 
+Santa Maria, Mãe de Deus, 
+rogai por nós pecadores, 
+agora e na hora da nossa morte. Amém.</div>
+        <div class="card-footer">
+          <span>Autor/Origem: Evangelho de São Lucas</span>
+          <button class="btn-treino" onclick="alternarTreino('oracao-maria')">Modo Memorizar 🧠</button>
+        </div>
+      </article>
+
+      <article class="card">
+        <span class="badge">Proteção Espiritual</span>
+        <h2>Oração da Cruz de São Bento</h2>
+        <div class="oracao-texto" id="oracao-bento">A Cruz Sagrada seja a minha luz, não seja o dragão meu guia. Retira-te, satanás! Nunca me aconselhes coisas vãs. É mau o que me ofereces, bebe tu mesmo o teu veneno. Amém.</div>
+        <div class="card-footer">
+          <span>Autor/Origem: São Bento de Núrsia (Século VI)</span>
+          <button class="btn-treino" onclick="alternarTreino('oracao-bento')">Modo Memorizar 🧠</button>
+        </div>
+      </article>
+
+      <article class="card">
+        <span class="badge">Eucarística / Devoção</span>
+        <h2>Alma de Cristo (Anima Christi)</h2>
+        <div class="oracao-texto" id="oracao-anima">Alma de Cristo, santificai-me.
+Corpo de Cristo, salvai-me.
+Sangue de Cristo, inebriai-me.
+Água do lado de Cristo, lavai-me.
+Paixão de Cristo, confortai-me.
+Ó bom Jesus, ouvi-me.
+Dentro das vossas chagas, escondei-me.
+Não permitais que me separe de Vós.
+Do espírito maligno, defendei-me.
+Na hora da minha morte, chamai-me e mandai-me ir para Vós, para que com os vossos Santos Vos louve por todos os séculos dos séculos. Amém.</div>
+        <div class="card-footer">
+          <span>Autor/Origem: Santo Inácio de Loyola / Tradição Medieval</span>
+          <button class="btn-treino" onclick="alternarTreino('oracao-anima')">Modo Memorizar 🧠</button>
+        </div>
+      </article>
+
+      <article class="card">
+        <span class="badge">Devoção</span>
+        <h2>Creio em Deus Pai</h2>
+        <div class="oracao-texto" id="oracao-creio">Creio em Deus Pai, todo-poderoso, criador do Céu e da Terra e em Jesus Cristo, seu único Filho, Nosso Senhor; que foi concebido pelo poder do Espírito Santo; nasceu da Virgem Maria, padeceu sob Pôncio pilatos, foi crucificado, morto e sepultado; desceu a mansão dos mortos; ressuscitou ao terceiro dia; subiu aos céus, está sentado a Direita de Deus Pai todo-poderoso, donde há de vir julgar os vivos e os mortos. Creio no Espírito Santo, na santa Igreja Católica, na comunhão dos santos, na remissão dos pecados, na ressurreição da carne, na Vida eterna. Amém.</div>
+        <div class="card-footer">
+          <span>Autor/Origem: Igreja Primitiva</span>
+          <button class="btn-treino" onclick="alternarTreino('oracao-creio')">Modo Memorizar 🧠</button>
+        </div>
+      </article>
+
+      <article class="card">
+        <span class="badge">Combate Espiritual</span>
+        <h2>Oração a São Miguel Arcanjo</h2>
+        <div class="oracao-texto" id="oracao-miguel">São Miguel Arcanjo, defendei-nos no combate; sede o nosso refúgio contra as maldades e ciladas do demônio. Ordene-lhe Deus, instantemente o pedimos; e vós, príncipe da milícia celeste, pela virtude divina, precipitai no inferno a satanás e a todos os espíritos malignos que andam pelo mundo para perder as almas. Amém.</div>
+        <div class="card-footer">
+          <span>Autor/Origem: Papa Leão XIII (Século XIX)</span>
+          <button class="btn-treino" onclick="alternarTreino('oracao-miguel')">Modo Memorizar 🧠</button>
+        </div>
+      </article>
+    </section>
+
+    <!-- 2. Orações em Latim -->
+    <section id="aba-latim" class="hidden">
+      <article class="card">
+        <span class="badge">Devotio</span>
+        <h2>Ave Maria, grátia plena</h2>
+        <div class="oracao-texto" id="oracao-latim-maria">Ave Maria, grátia plena, Dóminus técum. Benedicta tu in muliéribus et benedíctus frúctus véntris tui, Iésus.
+
+Sancta Maria, máter Dei, ora pro nóbis peccatóribus, nunc et in hora mórtis nóstrae.
+
+Amen.</div>
+        <div class="card-footer">
+          <span>Evangelium secundum Sanctum Lucam</span>
+          <button class="btn-treino" onclick="alternarTreino('oracao-latim-maria')">Memorare 🧠</button>
+        </div>
+      </article> 
+
+      <article class="card">
+        <span class="badge">Protectio Spiritualis</span>
+        <h2>Crux Sancti Patris Benedicti</h2>
+        <div class="oracao-texto" id="oracao-latim-bento">Crux Sacra sit mihi lux,
+non draco sit mihi dux.
+Vade retro, Satana!
+Numquam suade mihi vana.
+Sunt mala quae libas,
+ipse venena bibas. Amen.</div>
+        <div class="card-footer">
+          <span>Sanctus Benedictus de Nursia (Saeculo VI)</span>
+          <button class="btn-treino" onclick="alternarTreino('oracao-latim-bento')">Memorare 🧠</button>
+        </div>
+      </article>
+
+      <article class="card">
+        <span class="badge">Eucharistica / Devotio</span>
+        <h2>Anima Christi</h2>
+        <div class="oracao-texto" id="oracao-latim-anima">Anima Christi, sanctifica me.
+Corpus Christi, salva me.
+Sanguis Christi, inebria me.
+Aqua lateris Christi, lava me.
+Passio Christi, conforta me.
+O bone Iesu, exaudi me.
+Intra tua vulnera absconde me.
+Ne permittas me separari a te.
+Ab hoste maligno defende me.
+In hora mortis meae voca me.
+Et iube me venire ad te,
+ut cum Sanctis tuis laudem te
+in saecula saeculorum. Amen.</div>
+        <div class="card-footer">
+          <span>Traditio Medievalis / S. Ignatius de Loyola</span>
+          <button class="btn-treino" onclick="alternarTreino('oracao-latim-anima')">Memorare 🧠</button>
+        </div>
+      </article>
+
+      <article class="card">
+        <span class="badge">Devotio</span>
+        <h2>Credo in Deum Patrem</h2>
+        <div class="oracao-texto" id="oracao-latim-credo">Credo in Deum Patrem omnipotentem, Creatorem caeli et terrae. 
+
+Et in Iesum Christum, Filium eius unicum, Dominum nostrum, qui conceptus est de Spiritu Sancto, natus ex Maria Virgine, passus sub Pontio Pilato, crucifixus, mortuus, et sepultus, descendit ad inferos, tertia die resurrexit a mortuis, ascendit ad caelos, sedet ad dexteram Dei Patris omnipotentis, inde venturus est iudicare vivos et mortuos. 
+
+Credo in Spiritum Sanctum, sanctam Ecclesiam catholicam, sanctorum communionem, remissionem peccatorum, carnis resurrectionem, vitam aeternam. 
+
+Amen.</div>
+        <div class="card-footer">
+          <span>Ecclesia primitiva</span>
+          <button class="btn-treino" onclick="alternarTreino('oracao-latim-credo')">Memorare 🧠</button>
+        </div>
+      </article>
+   
+      <article class="card">
+        <span class="badge">Pugna Spiritualis</span>
+        <h2>Sancte Michael Archangele</h2>
+        <div class="oracao-texto" id="oracao-latim-miguel">Sancte Michael Archangele, defende nos in proelio; contra nequitiam et insidias diaboli esto praesidium. Imperet illi Deus, supplices deprecamur: tuque, Princeps militiae caelestis, Satanam aliosque spiritus malignos, qui ad perditionem animarum pervagantur in mundo, divina virtute, in infernum detrude. Amen.</div>
+        <div class="card-footer">
+          <span>Papa Leo XIII (Saeculo XIX)</span>
+          <button class="btn-treino" onclick="alternarTreino('oracao-latim-miguel')">Memorare 🧠</button>
+        </div>
+      </article>
+    </section>
+
+    <!-- 3. Eucaristia -->
+    <section id="aba-eucaristia" class="hidden">
+      <article class="card">
+        <span class="badge">Presença Real</span>
+        <h2>O Mistério da Santíssima Eucaristia</h2>
+        <p>O sacramento da Eucaristia completa a iniciação cristã, isto é, aqueles que receberam o Batismo e a Confirmação e, portanto, são membros da Igreja e se deixam configurar a Cristo pelo Seu Espírito, podem por meio da Eucaristia ter participação no próprio sacrifício do Senhor, juntamente com a comunidade dos fiéis.</p>
+
+        <p>Instituído por Jesus na Última Ceia, a Eucaristia é “o sacrifício eucarístico do seu corpo e sangue”, o memorial contínuo de Sua morte e ressurreição confiado à Igreja, Sua esposa, até que Ele volte. A Eucaristia é, ao mesmo tempo, a fonte e o cume de toda a vida cristã. Os outros sacramentos estão em função deste, pois “na santíssima Eucaristia está contido todo o tesouro espiritual da Igreja, isto é, o próprio Cristo, nossa Páscoa.” A Eucaristia é o ápice da ação pela qual Deus santifica o mundo e da adoração oferecida a Cristo e ao Pai.</p>
+
+        <p>Tamanha é a riqueza deste mistério que muitos nomes podem fazer referência à Eucaristia. Entre eles, Ceia do Senhor, Fração do Pão, Comunhão, Santo Sacrifício, e outros, cada um revelando uma dimensão única do mistério deste sacramento. Além disso, a maneira como Cristo está presente nas espécies eucarísticas é única e isso eleva a Eucaristia acima de todos os outros sacramentos e a torna o ápice da vida espiritual e o objetivo para o qual todos os sacramentos apontam.</p>
+
+        <p>“No santíssimo sacramento da Eucaristia estão contidos, verdadeira, real e substancialmente, o corpo e o sangue, conjuntamente com a alma e a divindade de nosso Senhor Jesus Cristo e, por conseguinte, Cristo completo” Por isso, essa presença é chamada de “real” — não porque as outras presenças não sejam reais, mas porque é a presença substancial de Cristo, Deus e homem, de maneira única e completa.</p>
+
+        <figure class="figura-sacra">
+          <img src="eucaristia.jpg" alt="A Instituição da Eucaristia">
+          <figcaption class="figura-legenda">A Instituição da Eucaristia.</figcaption>
+        </figure>
+
+        <p>“A comunhão diária não pode conviver com o desejo de aparecer, vaidade no vestir, prazeres da gula, comodidades, conversas frívolas e maldosas. Exige oração, mortificação, recolhimento”.</p> 
+
+        <p>“Ficai certos de que todos os instantes da vossa vida, o tempo que passardes diante do Divino Sacramento será o que vos dará mais força durante a vida, mais consolação na hora da morte e durante a eternidade”. - Santo Afonso de Ligório.</p>
+      </article>
+    </section>
+
+    <!-- 4. Santos -->
+    <section id="aba-santos" class="hidden">
+      <article class="card">
+        <span class="badge">Festa: 11 de Julho</span>
+        <h2>São Bento de Núrsia</h2>
+        <p>Pai dos monges do Ocidente e patriarca da Ordem Beneditina. Escreveu a célebre Santa Regra ("Ora et Labora"), destacando-se pela luta espiritual, discernimento e a oração contínua contra as ciladas do inimigo.</p>
+      </article>
+
+      <article class="card">
+        <span class="badge">Festa: 31 de Julho</span>
+        <h2>Santo Inácio de Loyola</h2>
+        <p>Fundador da Companhia de Jesus (Jesuítas) e autor dos célebres "Exercícios Espirituais". Mestre do discernimento de espíritos e da busca constante de em tudo amar e servir à Maior Glória de Deus (ADMG).</p>
+      </article>
+
+      <article class="card">
+        <span class="badge">Festa: 29 de Setembro</span>
+        <h2>São Miguel Arcanjo</h2>
+        <p>Príncipe da milícia celeste e guardião fidelíssimo do povo de Deus. Seu nome é um brado de lealdade: "Quem como Deus?" ("Quis ut Deus?").</p>
+      </article>
+    </section>
+
+    <!-- 5. Arte Sacra -->
+    <section id="aba-artes" class="hidden">
+      <article class="card">
+        <span class="badge">Pinacoteca Sacra</span>
+        <h2>A Última Ceia - Leonardo da Vinci</h2>
+        <figure class="figura-sacra">
+          <img src="ultima-ceia.jpg" alt="A Última Ceia">
+          <figcaption class="figura-legenda">A Última Ceia - Leonardo da Vinci.</figcaption>
+        </figure>
+
+        <p>A Última Ceia, pintada entre 1495 e o início de 1498, é considerada talvez a pintura mural mais importante do mundo, "uma coisa bela e maravilhosa", como escreveu Giorgio Vasari em suas Vidas dos Mais Excelentes Pintores, Escultores e Arquitetos, obra na qual menciona Leonardo da Vinci e descreve a Última Ceia.</p>
+
+        <p>Pintor, arquiteto, escultor, engenheiro, inventor, matemático, anatomista e escritor, Leonardo da Vinci personificou o ideal do homem multifacetado almejado pelo Renascimento italiano.</p>
+        
+        <p>A Última Ceia oferece talvez o testemunho mais completo de seu gênio multifacetado, sua ânsia de experimentar e sua curiosidade inesgotável. No período em que trabalhava na pintura, na última década do século XV, Leonardo também se dedicava a estudos sobre luz, som, movimento e emoções humanas e suas expressões. Encontramos esses interesses refletidos na Última Ceia, na qual, talvez mais do que em qualquer outra obra, Leonardo demonstra sua preocupação em retratar o que chamava de “movimentos da alma” por meio de posturas, gestos e expressões.</p>
+      </article>
+
+      <article class="card">
+        <span class="badge">Pinacoteca Sacra</span>
+        <h2>Capela Sistina - Michelangelo Buonarroti</h2>
+        <figure class="figura-sacra">
+          <img src="capela cistina.jpg" alt="Afrescos da Capela Sistina">
+          <figcaption class="figura-legenda">Michelangelo pintou os afrescos do teto da Capela Sistina entre 1508 e 1512.</figcaption>
+        </figure>
+
+        <p>A abóboda da capela foi pintada entre 1508 e 1512 pelo artista renascentista Michelangelo Buonarroti a pedido do papa Júlio II. O pontífice desejava mudar a decoração da igreja, anteriormente adornada com estrelas douradas em um fundo azul.</p>
+
+        <p>Michelangelo se planejou bastante antes de iniciar a execução do projeto, dedicando um ano na preparação dos desenhos.</p>
+
+        <p>O artista era admirador do estilo chamado horror vacui - que vem do latim e significa "temor ao vazio" - e preencheu todos os espaços da abóboda com temas bíblicos.</p>
+      </article>
+    </section>
+
+    <!-- 6. Música Sacra -->
+    <section id="aba-musica" class="hidden">
+      <article class="card">
+        <span class="badge">Canto Gregoriano e Polifonia</span>
+        <h2>Tesouro Musical da Igreja</h2>
+        <p>Espaço reservado para links do YouTube/Spotify de cantos gregorianos e hinos sacros.</p>
+      </article>
+    </section>
+
+    <!-- 7. Literatura Católica -->
+    <section id="aba-literatura" class="hidden">
+      <article class="card">
+        <span class="badge">Patrística e Escolástica</span>
+        <h2>Santo Tomás de Aquino & Santo Agostinho</h2>
+        <p>Espaço reservado para os escritos, Suma Teológica, Confissões e livros recomendados.</p>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    // 1. Definição da Playlist e Controlo de Áudio
+    const playlist = [
+      { titulo: "O bom pastor -  coral Administração Apostólica São João Maria Vianey", arquivo: "o bom pastor.mp3" },
+      { titulo: "Media Vita - ANÚNA", arquivo: "media vita.mp3" },
+      { titulo: "Anima Christi - Marco Frisina", arquivo: "anima.m4a" },
+      { titulo: "Allegri - Miserere", arquivo: "aleggri.ogg" },
+    ];
+
+    let indiceAtual = 0;
+    const musica = document.getElementById('audio-fundo');
+    const botaoAudio = document.getElementById('btn-audio');
+
+    function carregarFaixa(indice) {
+      if (!musica || playlist.length === 0) return;
+      musica.src = playlist[indice].arquivo;
+      musica.volume = 0.3;
+      botaoAudio.setAttribute('title', 'Faixa: ' + playlist[indice].titulo);
+    }
+
+    function alternarMusica() {
+      if (!musica) return;
+
+      if (!musica.src || musica.src === "") {
+        carregarFaixa(indiceAtual);
+      }
+
+      if (musica.paused) {
+        musica.play().then(() => {
+          botaoAudio.innerText = '⏸';
+          botaoAudio.classList.add('tocando');
+        }).catch(erro => {
+          console.warn("Reprodução bloqueada pelo navegador até interação prévia:", erro);
+        });
+      } else {
+        musica.pause();
+        botaoAudio.innerText = '🎵';
+        botaoAudio.classList.remove('tocando');
+      }
+    }
+
+    function proximaFaixa() {
+      indiceAtual = (indiceAtual + 1) % playlist.length;
+      carregarFaixa(indiceAtual);
+      musica.play().then(() => {
+        botaoAudio.innerText = '⏸';
+        botaoAudio.classList.add('tocando');
+      }).catch(() => {});
+    }
+
+    function faixaAnterior() {
+      indiceAtual = (indiceAtual - 1 + playlist.length) % playlist.length;
+      carregarFaixa(indiceAtual);
+      musica.play().then(() => {
+        botaoAudio.innerText = '⏸';
+        botaoAudio.classList.add('tocando');
+      }).catch(() => {});
+    }
+
+    if (musica) {
+      musica.onended = function() {
+        proximaFaixa();
+      };
+      carregarFaixa(indiceAtual);
+    }
+
+    // 2. Controlo do Menu Lateral
+    function alternarMenu() {
+      const menu = document.getElementById('menu-lateral');
+      const overlay = document.getElementById('overlay');
+      menu.classList.toggle('aberto');
+      overlay.classList.toggle('visivel');
+    }
+
+    function fecharMenu() {
+      const menu = document.getElementById('menu-lateral');
+      const overlay = document.getElementById('overlay');
+      menu.classList.remove('aberto');
+      overlay.classList.remove('visivel');
+    }
+
+    function selecionarCategoria(nomeAba) {
+      const todasSecoes = document.querySelectorAll('main > section');
+      todasSecoes.forEach(secao => secao.classList.add('hidden'));
+
+      const secaoAlvo = document.getElementById('aba-' + nomeAba);
+      if (secaoAlvo) {
+        secaoAlvo.classList.remove('hidden');
+      }
+
+      const todosBotoes = document.querySelectorAll('.menu-item-btn');
+      todosBotoes.forEach(botao => {
+        botao.classList.remove('active');
+        if (botao.getAttribute('onclick').includes(nomeAba)) {
+          botao.classList.add('active');
+        }
+      });
+
+      fecharMenu();
+    }
+
+    // 3. Controlo do Modo Noturno / Claro
+    function alternarTema() {
+      const corpo = document.body;
+      const botaoTema = document.getElementById('btn-tema');
+
+      corpo.classList.toggle('dark-mode');
+
+      if (corpo.classList.contains('dark-mode')) {
+        botaoTema.innerText = '☀️';
+        localStorage.setItem('temaPreferido', 'dark');
+      } else {
+        botaoTema.innerText = '🌙';
+        localStorage.setItem('temaPreferido', 'light');
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const temaSalvo = localStorage.getItem('temaPreferido');
+      if (temaSalvo === 'dark') {
+        document.body.classList.add('dark-mode');
+        document.getElementById('btn-tema').innerText = '☀️';
+      }
+    });
+
+    // 4. Modo de Memorização
+    const textosOriginais = {};
+    function alternarTreino(id) {
+      const elemento = document.getElementById(id);
+      if (!textosOriginais[id]) {
+        textosOriginais[id] = elemento.innerHTML;
+        const textoLimpo = elemento.innerText;
+        const palavras = textoLimpo.split(/(\s+)/);
+        const textoModificado = palavras.map((item, index) => {
+          if (item.trim().length > 3 && index % 4 === 0) {
+            return `<span class="palavra-oculta" onclick="this.classList.toggle('revelada')">${item}</span>`;
+          }
+          return item;
+        }).join('');
+        elemento.innerHTML = textoModificado;
+      } else {
+        elemento.innerHTML = textosOriginais[id];
+        delete textosOriginais[id];
+      }
+    }
+  </script>
+</body>
+</html>
