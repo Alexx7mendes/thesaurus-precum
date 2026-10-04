@@ -144,7 +144,7 @@
       background-color: #38332e;
     }
 
-    /* Imagens e Figuras Sacras */
+    /* Imagens Sacras */
     .figura-sacra {
       margin: 28px 0;
       text-align: center;
@@ -397,7 +397,7 @@
 </head>
 <body>
 
-  <!-- Barra Superior Unificada -->
+  <!-- Barra Superior -->
   <div class="top-bar">
     <button class="btn-hamburguer" onclick="alternarMenu()" aria-label="Abrir menu">&#9776;</button>
     <div class="top-bar-titulo">Thesaurus Precum</div>
@@ -412,7 +412,6 @@
     </div>
   </div>
 
-  <!-- Reprodutor de Áudio -->
   <audio id="audio-fundo" preload="auto"></audio> 
 
   <div id="overlay" class="menu-overlay" onclick="fecharMenu()"></div>
@@ -689,10 +688,10 @@ Amen.</div>
   <script>
     // 1. Definição da Playlist e Controlo de Áudio
     const playlist = [
-      { titulo: "O bom pastor -  coral Administração Apostólica São João Maria Vianey", arquivo: "o bom pastor.mp3" },
+      { titulo: "Allegri - Miserere", arquivo: "aleggri.ogg" },
       { titulo: "Media Vita - ANÚNA", arquivo: "media vita.mp3" },
       { titulo: "Anima Christi - Marco Frisina", arquivo: "anima.m4a" },
-      { titulo: "Allegri - Miserere", arquivo: "aleggri.ogg" },
+      { titulo: "O bom pastor - Coral", arquivo: "o bom pastor.mp3" }
     ];
 
     let indiceAtual = 0;
